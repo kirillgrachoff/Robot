@@ -34,7 +34,7 @@ protected:
     std::vector<std::vector<char> > values;
     std::vector<std::vector<Point> > parents;
 
-    std::vector<Point> neibhours(Point s);
+    std::vector<Point> neighbours(Point s);
     void bfs(Point start);
     void find_path_to(Point start, Point end);
 };
