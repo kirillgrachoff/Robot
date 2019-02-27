@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5s)
+cmake_minimum_required(VERSION 3.5)
 project(RobotProject)
 
 set(CMAKE_CXX_STANDARD 11)
