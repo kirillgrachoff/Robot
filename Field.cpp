@@ -8,6 +8,7 @@
 #include <fstream>
 #include <deque>
 #include <cmath>
+#include <random>
 
 using namespace std;
 
@@ -34,6 +35,7 @@ Field::Field() {
 
 //TODO fill field from file and fill random
 Field::Field(string filename) {
+	std::random_device rand;
     if (filename == "") {
         ifstream in("defaultField.robotField");
         in >> cntX >> cntY;
