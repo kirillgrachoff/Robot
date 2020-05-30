@@ -60,7 +60,7 @@ int main() {
             field.RobotX = nextStep.x;
             field.RobotY = nextStep.y;
             if (stepIndex >= field.RobotPath.size()) {
-                done = true;
+                field.hasPath = false;
             }
         }
     }
