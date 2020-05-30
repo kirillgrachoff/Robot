@@ -5,6 +5,8 @@
 #ifndef ROBOTPROJECT_CONSTANTS_HPP
 #define ROBOTPROJECT_CONSTANTS_HPP
 
+#include <fstream>
+
 const char ROBOT = 'R';
 #define CL_ROBOT 0,0,255,255
 const char NULLELEMENT = 'O';
@@ -15,6 +17,13 @@ const char EXIT = 'E';
 #define CL_EXIT 0,150,0,255
 const char ROAD = '.';
 #define CL_ROAD 255,255,255,255
+namespace strange_namespace {
+	std::ofstream my_strange_logging_out("RobotPath.log");
+}
+std::ofstream& lout() {
+	return strange_namespace::my_strange_logging_out;
+}
+
 
 //static long long cntX = 100;
 //static long long cntY = 10;

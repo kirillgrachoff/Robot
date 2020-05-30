@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include <string>
+#include <fstream>
 #include "Constants.hpp"
 #include "Window.hpp"
 #include "Point.hpp"
@@ -17,7 +18,11 @@ int main() {
     getline(cin, filename);
     Field field(filename);
     field.path(Point(field.RobotX, field.RobotY), Point(field.ExitX, field.ExitY));
-    cout << "Path Found" << endl;
+    if (field.hasPath) cout << "Path Found" << endl;
+    else {
+    	cout << "No Path Found" << endl;
+    	return 0;
+    }
 
     Window window(field);
 
@@ -41,7 +46,7 @@ int main() {
 
         //Draw block
         window.drawAll(field);
-        cout << "size: " << field.RobotPath.size() << " index: " << stepIndex << endl;
+        if (field.hasPath) lout() << "size: " << field.RobotPath.size() << " index: " << stepIndex << endl;
         for (int j = 0; j < 1e7; j++) {
             for (int k = 0; k < 5; k++);
         }
@@ -51,8 +56,8 @@ int main() {
         //Counting block
         if (field.hasPath) {
             Point nextStep = field.RobotPath[stepIndex];
-            cout << "Current: (" << field.RobotX << ", " << field.RobotY << ")" << endl;
-            cout << "Next   : (" << nextStep.x << ", " << nextStep.y << ")" << endl;
+            lout() << "Current: (" << field.RobotX << ", " << field.RobotY << ")" << endl;
+            lout() << "Next   : (" << nextStep.x << ", " << nextStep.y << ")" << endl;
             field[field.RobotX][field.RobotY] = ROAD;
             field[nextStep.x][nextStep.y] = ROBOT;
             //swap(field[field.RobotX][field.RobotY], field[nextStep.x][nextStep.y]);
@@ -61,6 +66,8 @@ int main() {
             field.RobotY = nextStep.y;
             if (stepIndex >= field.RobotPath.size()) {
                 field.hasPath = false;
+                lout() << "ended path" << endl;
+                cout << "Path Founded\nExit The Window" << endl;
             }
         }
     }

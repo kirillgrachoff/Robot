@@ -38,6 +38,7 @@ Field::Field(string filename) {
 	std::random_device rand;
     if (filename == "") {
         ifstream in("defaultField.robotField");
+        RobotLevel = 6;
         in >> cntX >> cntY;
         values.resize(cntX, vector<char>(cntY));
         parents.resize(cntX, vector<Point>(cntY));
@@ -87,12 +88,12 @@ std::vector<char>& Field::operator[] (long long i) {
 }
 
 void Field::path(Point start, Point end) {
-    cout << "Robot: (" << RobotX << ", " << RobotY << ")\nExit: (" << ExitX << ", " << ExitY << ")" << endl;
+    lout() << "Robot: (" << RobotX << ", " << RobotY << ")\nExit: (" << ExitX << ", " << ExitY << ")" << endl;
     this->bfs(start);
-    cout << "Exit bfs()" << endl;
+    lout() << "Exit bfs()" << endl;
     RobotPath.reserve(1000);
     find_path_to(start, end);
-    cout << "Exit find_path_to()" << endl;
+    lout() << "Exit find_path_to()" << endl;
     if (RobotPath.size() == 0) hasPath = false;
 }
 
@@ -116,7 +117,7 @@ void Field::find_path_to(Point start, Point end) {
         if (end.x != start.x) hasPath = false;
         return;
     } //There must be ==, but... I wrote !=, so check it
-    cout << "In find_path_to({Point}(" << end.x << ", " << end.y << "))" << endl;
+    lout() << "In find_path_to({Point}(" << end.x << ", " << end.y << "))" << endl;
     find_path_to(start, parents[end.x][end.y]);
     this->RobotPath.push_back(end);
 }
