@@ -3,9 +3,9 @@
 //
 
 #include <zconf.h>
-#include "Window.h"
-#include "Constants.h"
-#include "Field.h"
+#include "Window.hpp"
+#include "Constants.hpp"
+#include "Field.hpp"
 
 /*Window::Window() {
     SDL_Init(SDL_INIT_EVERYTHING);

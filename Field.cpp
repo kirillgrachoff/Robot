@@ -3,8 +3,8 @@
 //
 
 #include <iostream>
-#include "Field.h"
-#include "Constants.h"
+#include "Field.hpp"
+#include "Constants.hpp"
 #include <fstream>
 #include <deque>
 #include <cmath>
@@ -121,10 +121,10 @@ void Field::find_path_to(Point start, Point end) {
 
 vector<Point> Field::near(Point s) {
     vector<Point> res;
-    if (s.y + 1 < cntY  && values[s.x][s.y + 1] != WALL)    res.push_back(s.copy( 0,  1));
-    if (s.x + 1 < cntX  && values[s.x + 1][s.y] != WALL)    res.push_back(s.copy( 1,  0));
-    if (s.x - 1 >= 0    && values[s.x - 1][s.y] != WALL)    res.push_back(s.copy(-1,  0));
-    if (s.y - 1 >= 0    && values[s.x][s.y - 1] != WALL)    res.push_back(s.copy( 0, -1));
-    //if (s.x + 1 < cntX && s.y + 1 < cntY && values[s.x + 1][s.y + 1] != WALL) res.push_back(s.copy(1, 1));
+    if (s.y + 1 < cntY  && values[s.x][s.y + 1] != WALL)    res.push_back(s.copyAndAdd(0, 1));
+    if (s.x + 1 < cntX  && values[s.x + 1][s.y] != WALL)    res.push_back(s.copyAndAdd(1, 0));
+    if (s.x - 1 >= 0    && values[s.x - 1][s.y] != WALL)    res.push_back(s.copyAndAdd(-1, 0));
+    if (s.y - 1 >= 0    && values[s.x][s.y - 1] != WALL)    res.push_back(s.copyAndAdd(0, -1));
+    //if (s.x + 1 < cntX && s.y + 1 < cntY && values[s.x + 1][s.y + 1] != WALL) res.push_back(s.copyAndAdd(1, 1));
     return res;
 }

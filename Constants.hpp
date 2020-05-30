@@ -2,8 +2,8 @@
 // Created by kirill on 6/24/18.
 //
 
-#ifndef ROBOTPROJECT_CONSTANTS_H
-#define ROBOTPROJECT_CONSTANTS_H
+#ifndef ROBOTPROJECT_CONSTANTS_HPP
+#define ROBOTPROJECT_CONSTANTS_HPP
 
 const char ROBOT = 'R';
 #define CL_ROBOT 0,0,255,255
@@ -20,4 +20,4 @@ const char ROAD = '.';
 //static long long cntY = 10;
 //const long long cellSize = 10;
 
-#endif //ROBOTPROJECT_CONSTANTS_H
+#endif //ROBOTPROJECT_CONSTANTS_HPP

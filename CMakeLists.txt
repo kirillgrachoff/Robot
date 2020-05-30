@@ -6,5 +6,5 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
-add_executable(RobotProject main.cpp Constants.h Window.cpp Window.h Point.h Field.cpp Field.h Point.cpp)
+add_executable(RobotProject main.cpp Constants.hpp Window.cpp Window.hpp Point.hpp Field.cpp Field.hpp Point.cpp)
 target_link_libraries(RobotProject ${SDL2_LIBRARIES})

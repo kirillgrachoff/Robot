@@ -2,10 +2,10 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include <string>
-#include "Constants.h"
-#include "Window.h"
-#include "Point.h"
-#include "Field.h"
+#include "Constants.hpp"
+#include "Window.hpp"
+#include "Point.hpp"
+#include "Field.hpp"
 
 using namespace std;
 

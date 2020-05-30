@@ -2,12 +2,12 @@
 // Created by kirill on 6/25/18.
 //
 
-#ifndef ROBOTPROJECT_FIELD_H
-#define ROBOTPROJECT_FIELD_H
+#ifndef ROBOTPROJECT_FIELD_HPP
+#define ROBOTPROJECT_FIELD_HPP
 
 #include <string>
 #include <vector>
-#include "Point.h"
+#include "Point.hpp"
 
 class Field {
 public:
@@ -40,4 +40,4 @@ protected:
 };
 
 
-#endif //ROBOTPROJECT_FIELD_H
+#endif //ROBOTPROJECT_FIELD_HPP
