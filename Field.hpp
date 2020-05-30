@@ -26,13 +26,13 @@ public:
     Field(std::string filename);
     ~Field();
 
-    std::vector<char> & operator[] (const long long i);
+    std::vector<char>& operator[] (long long i);
 
     void path(Point start, Point end);
 
 protected:
-    std::vector<std::vector<char> > values;
-    std::vector<std::vector<Point> > parents;
+    std::vector<std::vector<char>> values;
+    std::vector<std::vector<Point>> parents;
 
     std::vector<Point> near(Point s);
     void bfs(Point start);

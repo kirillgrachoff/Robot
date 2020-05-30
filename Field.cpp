@@ -80,7 +80,7 @@ Field::Field(string filename) {
 
 Field::~Field() {}
 
-std::vector<char>& Field::operator[] (const long long i) {
+std::vector<char>& Field::operator[] (long long i) {
     return values[i];
 }
 
