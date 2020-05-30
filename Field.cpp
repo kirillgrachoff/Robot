@@ -51,10 +51,10 @@ Field::Field(string filename) {
                 }
             }
         }
-        RobotX = rand() % cntX;
-        RobotY = rand() % cntY;
-        ExitX = rand() % cntY;
-        ExitY = rand() % cntY;
+        RobotX = rand() % std::min(cntX, 20LL);
+        RobotY = rand() % std::min(cntY, 20LL);
+        ExitX = cntX - 1 - (rand() % std::min(cntX, 20LL));
+        ExitY = cntY - 1 - (rand() % std::min(cntY, 20LL));
         values[RobotX][RobotY] = ROBOT;
         values[ExitX][ExitY] = EXIT;
     } else {
