@@ -10,6 +10,7 @@
 #include "Point.hpp"
 
 class Field {
+	std::ostream &lout;
 public:
     long long cntX;
     long long cntY;
@@ -22,8 +23,8 @@ public:
     bool hasPath = true;
     std::vector<Point> RobotPath;//shows next Points of path to exit, include exit
 
-    Field();
-    Field(std::string filename);
+    Field(std::ostream& logstream);
+    Field(std::string filename, std::ostream& logstream);
     ~Field();
 
     std::vector<char>& operator[] (long long i);

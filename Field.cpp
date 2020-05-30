@@ -12,7 +12,7 @@
 
 using namespace std;
 
-Field::Field() {
+Field::Field(std::ostream &logfile): lout(logfile) {
     values.resize(cntX, vector<char>(cntY));
     parents.resize(cntX, vector<Point>(cntY));
     for (auto &vc: values) {
@@ -34,7 +34,7 @@ Field::Field() {
 }
 
 //TODO fill field from file and fill random
-Field::Field(string filename) {
+Field::Field(string filename, std::ostream& logfile): lout(logfile) {
 	std::random_device rand;
     if (filename == "") {
         ifstream in("defaultField.robotField");
@@ -88,12 +88,12 @@ std::vector<char>& Field::operator[] (long long i) {
 }
 
 void Field::path(Point start, Point end) {
-    lout() << "Robot: (" << RobotX << ", " << RobotY << ")\nExit: (" << ExitX << ", " << ExitY << ")" << endl;
+    lout << "Robot: (" << RobotX << ", " << RobotY << ")\nExit: (" << ExitX << ", " << ExitY << ")" << endl;
     this->bfs(start);
-    lout() << "Exit bfs()" << endl;
+    lout << "Exit bfs()" << endl;
     RobotPath.reserve(1000);
     find_path_to(start, end);
-    lout() << "Exit find_path_to()" << endl;
+    lout << "Exit find_path_to()" << endl;
     if (RobotPath.size() == 0) hasPath = false;
 }
 
@@ -105,7 +105,7 @@ void Field::bfs(Point start) {
             if (parents[point.x][point.y].x != -1) continue;
             parents[point.x][point.y] = q.front();
             q.push_back(point);
-            if (point.x == ExitX && point.y == ExitY) cout << "Exit Found" << endl;
+            if (point.x == ExitX && point.y == ExitY) lout << "Exit Found" << endl;
         }
         q.pop_front();
     }
@@ -117,7 +117,7 @@ void Field::find_path_to(Point start, Point end) {
         if (end.x != start.x) hasPath = false;
         return;
     } //There must be ==, but... I wrote !=, so check it
-    lout() << "In find_path_to({Point}(" << end.x << ", " << end.y << "))" << endl;
+    lout << "In find_path_to({Point}(" << end.x << ", " << end.y << "))" << endl;
     find_path_to(start, parents[end.x][end.y]);
     this->RobotPath.push_back(end);
 }
