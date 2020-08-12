@@ -37,9 +37,9 @@ Field::Field(std::ostream &logfile): lout(logfile) {
 Field::Field(string filename, std::ostream& logfile): lout(logfile) {
 	std::random_device rand;
     if (filename == "") {
-        ifstream in("defaultField.robotField");
         RobotLevel = 6;
-        in >> cntX >> cntY;
+		cntX = rand() % 20 + 200;
+		cntY = rand() % 10 + 100;
         values.resize(cntX, vector<char>(cntY));
         parents.resize(cntX, vector<Point>(cntY));
         for (auto &vc: values) {
