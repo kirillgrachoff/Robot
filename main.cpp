@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <string>
+#include <unistd.h>
 #include "Constants.hpp"
 #include "Window.hpp"
 #include "Point.hpp"
@@ -47,10 +48,7 @@ int main() {
         //Draw block
         window.drawAll(field);
         if (field.hasPath) lout << "size: " << field.RobotPath.size() << " index: " << stepIndex << endl;
-        for (int j = 0; j < 1e7; j++) {
-            for (int k = 0; k < 5; k++);
-        }
-
+        usleep(50000);
         if (done) break;
 
         //Counting block
