@@ -1,12 +1,3 @@
 .idea
-*.iml
-cmake-build-debug/
-field.txt
-*.robotField
 fieldGenerator
-infoAboutProject.txt
-CMakeCache.txt
-CMakeFiles
-Makefile
-*.cbp
-cmake_install.cmake
+cmake-build-debug/
