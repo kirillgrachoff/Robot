@@ -31,7 +31,7 @@ long long& Field::dist(const Point& p) {
 
 // fill field from file OR fill random
 Field::Field(string filename, std::ostream& logfile): lout(logfile) {
-	std::random_device rand;
+	static std::random_device rand;
     if (filename == "") {
         RobotLevel = 6;
 		cntX = rand() % 20 + 200;
@@ -67,7 +67,7 @@ Field::Field(string filename, std::ostream& logfile): lout(logfile) {
     } else {
         ifstream in(filename);
         in >> cntX >> cntY;
-        distant.resize(cntX, vector<long long>(cntY, 0));
+        distant.resize(cntX, vector<long long>(cntY, -1));
         values.resize(cntX, vector<char>(cntY, NULLELEMENT));
         for (long long y = 0; y < cntY; y++) {
             for (long long x = 0; x < cntX; x++) {
@@ -128,10 +128,12 @@ bool Field::existPath() {
 }
 
 void Field::step() {
+    static std::random_device rand;
     set<char> valid{ROAD, EXIT};
     for (auto& it : robots) {
         if (dist(it) <= 0) continue;
         auto next = near(it, valid);
+        std::shuffle(next.begin(), next.end(), rand);
         for (auto& nxt : next) {
             if (dist(nxt) >= dist(it)) continue;
             if (value(nxt) == EXIT) {

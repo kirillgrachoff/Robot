@@ -37,7 +37,7 @@ int main() {
         }
         //Draw block
         window.drawAll(field);
-        usleep(50000);
+        usleep(80000);
         if (done) break;
         //Counting block
         if (field.existPath()) {
