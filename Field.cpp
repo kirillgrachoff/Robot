@@ -1,6 +1,5 @@
-//
-// Created by kirill on 6/25/18.
-//
+#ifndef ROBOTPROJECT_FIELD_CPP
+#define ROBOTPROJECT_FIELD_CPP
 
 #include <iostream>
 #include "Field.hpp"
@@ -9,31 +8,28 @@
 #include <deque>
 #include <cmath>
 #include <random>
+#include <algorithm>
+#include <set>
 
 using namespace std;
 
-Field::Field(std::ostream &logfile): lout(logfile) {
-    values.resize(cntX, vector<char>(cntY));
-    parents.resize(cntX, vector<Point>(cntY));
-    for (auto &vc: values) {
-        for (auto &val: vc) {
-            long long k = rand() % 20;
-            if (k < std::min(10LL, RobotLevel)) {
-                val = WALL;
-            } else {
-                val = ROAD;
-            }
-        }
-    }
-    RobotX = rand() % cntX;
-    RobotY = rand() % cntY;
-    ExitX = rand() % cntY;
-    ExitY = rand() % cntY;
-    values[RobotX][RobotY] = ROBOT;
-    values[ExitX][ExitY] = EXIT;
+char Field::value(const Point& p) const {
+    return values[p.x][p.y];
 }
 
-//TODO fill field from file and fill random
+char& Field::value(const Point& p) {
+    return values[p.x][p.y];
+}
+
+long long Field::dist(const Point& p) const {
+    return distant[p.x][p.y];
+}
+
+long long& Field::dist(const Point& p) {
+    return distant[p.x][p.y];
+}
+
+// fill field from file OR fill random
 Field::Field(string filename, std::ostream& logfile): lout(logfile) {
 	std::random_device rand;
     if (filename == "") {
@@ -41,7 +37,7 @@ Field::Field(string filename, std::ostream& logfile): lout(logfile) {
 		cntX = rand() % 20 + 200;
 		cntY = rand() % 10 + 100;
         values.resize(cntX, vector<char>(cntY));
-        parents.resize(cntX, vector<Point>(cntY));
+        distant.resize(cntX, vector<long long>(cntY, -1));
         for (auto &vc: values) {
             for (auto &val: vc) {
                 long long k = rand() % 20;
@@ -52,28 +48,36 @@ Field::Field(string filename, std::ostream& logfile): lout(logfile) {
                 }
             }
         }
-        RobotX = rand() % std::min(cntX, 20LL);
-        RobotY = rand() % std::min(cntY, 20LL);
-        ExitX = cntX - 1 - (rand() % std::min(cntX, 20LL));
-        ExitY = cntY - 1 - (rand() % std::min(cntY, 20LL));
-        values[RobotX][RobotY] = ROBOT;
-        values[ExitX][ExitY] = EXIT;
+        int robotCnt = rand() % 3 + 1;
+        robots.resize(robotCnt);
+        for (auto& it : robots) {
+            it = Point{rand() % std::min(cntX, 20LL), rand() % std::min(cntY, 20LL)};
+            value(it) = ROBOT;
+        }
+        std::sort(robots.begin(), robots.end());
+        robots.erase(std::unique(robots.begin(), robots.end()), robots.end());
+        int exitCnt = rand() % 3 + 1;
+        exits.resize(exitCnt);
+        for (auto& it : exits) {
+            it = Point{cntX - 1 - (rand() % std::min(cntX, 20LL)), cntY - 1 - (rand() % std::min(cntY, 20LL))};
+            value(it) = EXIT;
+        }
+        std::sort(exits.begin(), exits.end());
+        exits.erase(std::unique(exits.begin(), exits.end()), exits.end());
     } else {
         ifstream in(filename);
         in >> cntX >> cntY;
-        parents.resize(cntX, vector<Point>(cntY));
+        distant.resize(cntX, vector<long long>(cntY, 0));
         values.resize(cntX, vector<char>(cntY, NULLELEMENT));
         for (long long y = 0; y < cntY; y++) {
             for (long long x = 0; x < cntX; x++) {
                 char element;
                 in >> element;
                 if (element == EXIT) {
-                    ExitX = x;
-                    ExitY = y;
+                    exits.emplace_back(Point(x, y));
                 }
                 if (element == ROBOT) {
-                    RobotX = x;
-                    RobotY = y;
+                    robots.emplace_back(Point(x, y));
                 }
                 values[x][y] = element;
             }
@@ -83,51 +87,63 @@ Field::Field(string filename, std::ostream& logfile): lout(logfile) {
 
 Field::~Field() {}
 
-std::vector<char>& Field::operator[] (long long i) {
+std::vector<char>& Field::operator[] (size_t i) {
     return values[i];
 }
 
-void Field::path(Point start, Point end) {
-    lout << "Robot: (" << RobotX << ", " << RobotY << ")\nExit: (" << ExitX << ", " << ExitY << ")" << endl;
-    this->bfs(start);
-    lout << "Exit bfs()" << endl;
-    RobotPath.reserve(1000);
-    find_path_to(start, end);
-    lout << "Exit find_path_to()" << endl;
-    if (RobotPath.size() == 0) hasPath = false;
-}
-
-void Field::bfs(Point start) {
+void Field::countPathes() {
     deque<Point> q;
-    q.push_back(start);
+    set<char> valid{ROAD, ROBOT, EXIT};
+    for (auto& it : exits) {
+        q.push_back(it);
+        dist(it) = 0;
+    }
     while (!q.empty()) {
-        for (auto &point: near(q.front())) {
-            if (parents[point.x][point.y].x != -1) continue;
-            parents[point.x][point.y] = q.front();
-            q.push_back(point);
-            if (point.x == ExitX && point.y == ExitY) lout << "Exit Found" << endl;
+        for (auto& next : near(q.front(), valid)) {
+            if (dist(next) >= 0) continue;
+            dist(next) = dist(q.front()) + 1;
+            q.push_back(next);
         }
         q.pop_front();
     }
-    parents[RobotX][RobotY] = Point(-1, -1);
 }
 
-void Field::find_path_to(Point start, Point end) {
-    if (parents[end.x][end.y].x == -1 && parents[end.x][end.y].y == -1) {
-        if (end.x != start.x) hasPath = false;
-        return;
-    } //There must be ==, but... I wrote !=, so check it
-    lout << "In find_path_to({Point}(" << end.x << ", " << end.y << "))" << endl;
-    find_path_to(start, parents[end.x][end.y]);
-    this->RobotPath.push_back(end);
-}
-
-vector<Point> Field::near(Point s) {
+vector<Point> Field::near(Point s, set<char>& valid) {
     vector<Point> res;
-    if (s.y + 1 < cntY  && values[s.x][s.y + 1] != WALL)    res.push_back(s.copyAndAdd(0, 1));
-    if (s.x + 1 < cntX  && values[s.x + 1][s.y] != WALL)    res.push_back(s.copyAndAdd(1, 0));
-    if (s.x - 1 >= 0    && values[s.x - 1][s.y] != WALL)    res.push_back(s.copyAndAdd(-1, 0));
-    if (s.y - 1 >= 0    && values[s.x][s.y - 1] != WALL)    res.push_back(s.copyAndAdd(0, -1));
-    //if (s.x + 1 < cntX && s.y + 1 < cntY && values[s.x + 1][s.y + 1] != WALL) res.push_back(s.copyAndAdd(1, 1));
+    if (s.y + 1 < cntY  && valid.count(values[s.x][s.y + 1])) res.push_back(s.copyAndAdd(0, 1));
+    if (s.x + 1 < cntX  && valid.count(values[s.x + 1][s.y])) res.push_back(s.copyAndAdd(1, 0));
+    if (s.x - 1 >= 0    && valid.count(values[s.x - 1][s.y])) res.push_back(s.copyAndAdd(-1, 0));
+    if (s.y - 1 >= 0    && valid.count(values[s.x][s.y - 1])) res.push_back(s.copyAndAdd(0, -1));
     return res;
 }
+
+bool Field::existPath() {
+    if (existPathCounted) return existPathAnswer;
+    existPathCounted = true;
+    countPathes();
+    for (auto& it : robots) {
+        existPathAnswer |= dist(it) >= 0;
+    }
+    return existPathAnswer;
+}
+
+void Field::step() {
+    set<char> valid{ROAD, EXIT};
+    for (auto& it : robots) {
+        if (dist(it) <= 0) continue;
+        auto next = near(it, valid);
+        for (auto& nxt : next) {
+            if (dist(nxt) >= dist(it)) continue;
+            if (value(nxt) == EXIT) {
+                value(it) = ROAD;
+                it = nxt;
+                break;
+            }
+            std::swap(value(it), value(nxt));
+            it = nxt;
+            break;
+        }
+    }
+}
+
+#endif // ROBOTPROJECT_FIELD_CPP

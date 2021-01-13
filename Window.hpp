@@ -13,26 +13,24 @@
 
 class Window {
 public:
-    SDL_Window *window;
-    SDL_Renderer *render;
+    SDL_Window* window;
+    SDL_Renderer* render;
     SDL_Event ev;
     long long cntX;
     long long cntY;
 
     const long long cellSize = 7;
 
-    //Window();
-    Window(Field &field);
+    Window() = delete;
+    Window(const Field& field);
     ~Window();
 
     void drawAll(Field &field);
-    void drawElement(char element, long long x, long long y);
-
-    void drawNoPathField(Field &field, unsigned int seconds);
 
 private:
+    void drawElement(char element, long long x, long long y);
     void drawLines();
-    void drawField(Field &field);
+    void drawField(Field& field);
 };
 
 

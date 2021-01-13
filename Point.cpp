@@ -1,7 +1,5 @@
-//
-// Created by kirill on 6/25/18.
-//
-
+#ifndef ROBOTPROJECT_POINT_CPP
+#define ROBOTPROJECT_POINT_CPP
 #include "Point.hpp"
 
 Point::Point(long long x, long long y) {
@@ -17,3 +15,5 @@ Point::Point() {
 Point Point::copyAndAdd(long long deltaX, long long deltaY) {
     return Point{this->x + deltaX, this->y + deltaY};
 }
+
+#endif // ROBOTPROJECT_POINT_CPP
