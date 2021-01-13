@@ -129,6 +129,9 @@ bool Field::existPath() {
 
 void Field::step() {
     static std::random_device rand;
+    std::sort(robots.begin(), robots.end(), [=](const Point& a, const Point& b) {
+        return dist(a) < dist(b);
+    });
     set<char> valid{ROAD, EXIT};
     for (auto& it : robots) {
         if (dist(it) <= 0) continue;
