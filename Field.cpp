@@ -31,15 +31,15 @@ long long& Field::dist(const Point& p) {
 
 // fill field from file OR fill random
 Field::Field(string filename, std::ostream& logfile): lout(logfile) {
-	static std::random_device rand;
+    static std::random_device rand;
     if (filename == "") {
         RobotLevel = 6;
-		cntX = rand() % 20 + 200;
-		cntY = rand() % 10 + 100;
+        cntX = rand() % 20 + 200;
+        cntY = rand() % 10 + 100;
         values.resize(cntX, vector<char>(cntY));
         distant.resize(cntX, vector<long long>(cntY, -1));
-        for (auto &vc: values) {
-            for (auto &val: vc) {
+        for (auto& vc: values) {
+            for (auto& val: vc) {
                 long long k = rand() % 20;
                 if (k < std::min(10LL, RobotLevel)) {
                     val = WALL;
@@ -48,7 +48,7 @@ Field::Field(string filename, std::ostream& logfile): lout(logfile) {
                 }
             }
         }
-        int robotCnt = rand() % 3 + 1;
+        int robotCnt = rand() % 10 + 7;
         robots.resize(robotCnt);
         for (auto& it : robots) {
             it = Point{rand() % std::min(cntX, 20LL), rand() % std::min(cntY, 20LL)};
@@ -56,7 +56,7 @@ Field::Field(string filename, std::ostream& logfile): lout(logfile) {
         }
         std::sort(robots.begin(), robots.end());
         robots.erase(std::unique(robots.begin(), robots.end()), robots.end());
-        int exitCnt = rand() % 3 + 1;
+        int exitCnt = rand() % 5 + 2;
         exits.resize(exitCnt);
         for (auto& it : exits) {
             it = Point{cntX - 1 - (rand() % std::min(cntX, 20LL)), cntY - 1 - (rand() % std::min(cntY, 20LL))};

@@ -7,4 +7,4 @@ libsdl2
 g++-9
 
 # Windows Depends
-Please, rewrite CMakeLists.txt to find SDL2 on your machine.
+Windows now is not supported because of unix-specific delay function.
